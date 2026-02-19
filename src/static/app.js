@@ -20,14 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
-        // Create participants list HTML
-        let participantsHTML = '<div class="participants-section"><strong>Participants:</strong>';
+        // Participants toggle logic
+        let participantsHTML = '<div class="participants-section">';
+        participantsHTML += '<strong>Participants:</strong>';
         if (details.participants && details.participants.length > 0) {
-          participantsHTML += '<ul class="participants-list">';
-          details.participants.forEach(email => {
-            participantsHTML += `<li>${email}</li>`;
-          });
-          participantsHTML += '</ul>';
+          participantsHTML += `<ul class="participants-list" style="display: none;"></ul>`;
+          participantsHTML += `<div class="participants-summary">${details.participants[0]}${details.participants.length > 1 ? ' <span class="more-count">(+ ' + (details.participants.length - 1) + ' more)</span>' : ''}</div>`;
+          participantsHTML += `<button class="toggle-participants">Show All</button>`;
         } else {
           participantsHTML += '<span class="no-participants">No participants yet</span>';
         }
@@ -40,6 +39,31 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
           ${participantsHTML}
         `;
+
+        // Add participants list dynamically
+        if (details.participants && details.participants.length > 0) {
+          const participantsSection = activityCard.querySelector('.participants-section');
+          const participantsList = participantsSection.querySelector('.participants-list');
+          details.participants.forEach(email => {
+            const li = document.createElement('li');
+            li.textContent = email;
+            participantsList.appendChild(li);
+          });
+
+          const toggleBtn = participantsSection.querySelector('.toggle-participants');
+          const summaryDiv = participantsSection.querySelector('.participants-summary');
+          toggleBtn.addEventListener('click', () => {
+            if (participantsList.style.display === 'none') {
+              participantsList.style.display = 'block';
+              summaryDiv.style.display = 'none';
+              toggleBtn.textContent = 'Hide';
+            } else {
+              participantsList.style.display = 'none';
+              summaryDiv.style.display = 'block';
+              toggleBtn.textContent = 'Show All';
+            }
+          });
+        }
 
         activitiesList.appendChild(activityCard);
 

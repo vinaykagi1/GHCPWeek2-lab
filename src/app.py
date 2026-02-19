@@ -1,7 +1,4 @@
-
 # Endpoint to remove a participant from an activity
-from fastapi import status
-
 @app.delete("/activities/{activity_name}/unregister")
 def unregister_from_activity(activity_name: str, email: str):
     """Unregister a student from an activity"""
@@ -12,6 +9,7 @@ def unregister_from_activity(activity_name: str, email: str):
         raise HTTPException(status_code=404, detail="Participant not found")
     activity["participants"].remove(email)
     return {"message": f"Unregistered {email} from {activity_name}"}
+
 """
 High School Management System API
 

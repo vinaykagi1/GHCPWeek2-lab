@@ -14,8 +14,8 @@
 
 .participants-list {
   margin: 8px 0 0 0;
-  padding-left: 0;
-  list-style: none;
+  padding-left: 40px;
+  list-style: disc;
 }
 
 .participant-item {
@@ -30,16 +30,7 @@
   font-size: 14px;
 }
 
-.delete-participant {
-  cursor: pointer;
-  margin-left: 8px;
-  color: #c62828;
-  font-size: 16px;
-  transition: color 0.2s;
-}
-.delete-participant:hover {
-  color: #b71c1c;
-}
+
 
 .participants-list li {
   color: #333;

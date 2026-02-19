@@ -24,11 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let participantsHTML = '<div class="participants-section">';
         participantsHTML += '<strong>Participants:</strong>';
         if (details.participants && details.participants.length > 0) {
-          participantsHTML += `<ul class="participants-list" style="display: none;"></ul>`;
-          participantsHTML += `<div class="participants-summary">${details.participants[0]}${details.participants.length > 1 ? ' <span class="more-count">(+ ' + (details.participants.length - 1) + ' more)</span>' : ''}</div>`;
-          participantsHTML += `<button class="toggle-participants">Show All</button>`;
+          participantsHTML += `<ul class=\"participants-list\" style=\"display: none; list-style: none; padding-left: 0;\"></ul>`;
+          participantsHTML += `<div class=\"participants-summary\">${details.participants[0]}${details.participants.length > 1 ? ' <span class=\"more-count\">(+ ' + (details.participants.length - 1) + ' more)</span>' : ''}</div>`;
+          participantsHTML += `<button class=\"toggle-participants\">Show All</button>`;
         } else {
-          participantsHTML += '<span class="no-participants">No participants yet</span>';
+          participantsHTML += '<span class=\"no-participants\">No participants yet</span>';
         }
         participantsHTML += '</div>';
 
@@ -46,7 +46,23 @@ document.addEventListener("DOMContentLoaded", () => {
           const participantsList = participantsSection.querySelector('.participants-list');
           details.participants.forEach(email => {
             const li = document.createElement('li');
-            li.textContent = email;
+            li.className = 'participant-item';
+            li.innerHTML = `<span class=\"participant-email\">${email}</span> <span class=\"delete-participant\" title=\"Unregister\">🗑️</span>`;
+            // Add click event to delete icon
+            li.querySelector('.delete-participant').addEventListener('click', async () => {
+              if (confirm(`Unregister ${email} from ${name}?`)) {
+                try {
+                  const res = await fetch(`/activities/${encodeURIComponent(name)}/unregister?email=${encodeURIComponent(email)}`, { method: 'DELETE' });
+                  if (res.ok) {
+                    fetchActivities(); // Refresh list
+                  } else {
+                    alert('Failed to unregister participant.');
+                  }
+                } catch (err) {
+                  alert('Error occurred while unregistering.');
+                }
+              }
+            });
             participantsList.appendChild(li);
           });
 
